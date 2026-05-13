@@ -1,0 +1,1295 @@
+{
+  "name": "Follow up task Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        336
+      ],
+      "id": "293f7b57-2c0a-43ec-9800-97c636416ab9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Admin ",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7CET5sTpYUJJJO",
+          "mode": "list",
+          "cachedResultName": "Students",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tbl7CET5sTpYUJJJO"
+        },
+        "filterByFormula": "AND({Trial Status}='Trial Done', NOT({Follow Up Created}))",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        336
+      ],
+      "id": "b85cbdc5-bbbb-4d8b-9f52-1adc92bd69b9",
+      "name": "Search Students",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Students",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblc5fKV8B6FZoCh2",
+          "mode": "list",
+          "cachedResultName": "Follow Up Tasks",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tblc5fKV8B6FZoCh2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Pending",
+            "Task Type": "Post-Trial Follow Up",
+            "Parent Phone": "={{ $json.fields['Parent Phone'] }}",
+            "Parent Name": "={{ $json.fields['Parent Name'] }}",
+            "Notes": "Follow up after trial lesson",
+            "Student": "={{ [$json.id ]}}",
+            "Due Date": "={{ new Date($json.fields['Trial Date']).toDateTime().plus(1, 'days') }}",
+            "Priority": "={{ {Good: \"High\",\nAverage: \"Medium\", Poor: \"Low\"}[$json.fields[\"Trial Performance\"]] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Task id",
+              "displayName": "Task id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Student",
+              "displayName": "Student",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Parent Name",
+              "displayName": "Parent Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Parent Phone",
+              "displayName": "Parent Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Task Type",
+              "displayName": "Task Type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Post-Trial Follow Up",
+                  "value": "Post-Trial Follow Up"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": " Completed",
+                  "value": " Completed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Due Date",
+              "displayName": "Due Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        240
+      ],
+      "id": "3332cc6a-36ca-455e-8418-0a38809f7b90",
+      "name": "Create follow-up tasks",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Students",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7CET5sTpYUJJJO",
+          "mode": "list",
+          "cachedResultName": "Students",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tbl7CET5sTpYUJJJO"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Follow Up Created": true,
+            "id": "={{ $json.fields.Student[0]}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Student Name",
+              "displayName": "Student Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Parent Name",
+              "displayName": "Parent Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Parent Phone",
+              "displayName": "Parent Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Program Interest",
+              "displayName": "Program Interest",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Roblox",
+                  "value": "Roblox"
+                },
+                {
+                  "name": "Minecraft",
+                  "value": "Minecraft"
+                },
+                {
+                  "name": "Python",
+                  "value": "Python"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Trial Status",
+              "displayName": "Trial Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Trial Arranged",
+                  "value": "Trial Arranged"
+                },
+                {
+                  "name": "Trial Done",
+                  "value": "Trial Done"
+                },
+                {
+                  "name": "Trial Missed",
+                  "value": "Trial Missed"
+                },
+                {
+                  "name": " Won",
+                  "value": " Won"
+                },
+                {
+                  "name": "Lost",
+                  "value": "Lost"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Trial Date",
+              "displayName": "Trial Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Follow Up Created",
+              "displayName": "Follow Up Created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Follow Up Tasks",
+              "displayName": "Follow Up Tasks",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        144
+      ],
+      "id": "4eca9e5a-5d6f-41ea-9033-88614830458c",
+      "name": "Check the checkboxs for task-created students",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "haop0002@e.ntu.edu.sg",
+        "subject": " Notification: Follow up task created ",
+        "emailType": "text",
+        "message": "=New post-trial follow-up created for {{ $json.fields['Student Name'] }}.\nParent: {{ $json.fields['Parent Name'] }}\nPhone: {{ $json.fields['Parent Phone'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        48
+      ],
+      "id": "af45403a-8224-40b5-9725-669f1436a333",
+      "name": "Send a message",
+      "webhookId": "17570131-7eb4-4f87-a491-b782ec41b567",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cVWS40hGG7SfvhgX",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Admin ",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQZcqnnPS3SIVV2",
+          "mode": "list",
+          "cachedResultName": "Automation Logs",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tblQZcqnnPS3SIVV2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow Name": "={{ $workflow.name }}",
+            "Status": "Failed",
+            "Error Message": "=Search Error: {{ $json.error.message }}\nDescription: {{ $json.error.description }}",
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Workflow Name",
+              "displayName": "Workflow Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Student Name",
+              "displayName": "Student Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Success",
+                  "value": "Success"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        432
+      ],
+      "id": "3188746f-734e-4123-8a1b-00bbc592d36f",
+      "name": "Log Error: search",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "200900a0-afb5-474a-8a27-989d2ff48e82",
+              "leftValue": "={{$json.error}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        336
+      ],
+      "id": "bfc7d41b-4687-4901-aa29-7ae74654758c",
+      "name": "If no error"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "575d8ecd-ca9f-4ead-b4ab-8b647e228ee6",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        240
+      ],
+      "id": "8036ba78-96f7-4526-a448-460b8a8a37f0",
+      "name": "IF no error"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b1164084-c330-4670-96ee-13bbf741ee81",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        144
+      ],
+      "id": "b78d8ab7-7e4c-4ae3-a32d-871fa56b6aa4",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Admin ",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQZcqnnPS3SIVV2",
+          "mode": "list",
+          "cachedResultName": "Automation Logs",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tblQZcqnnPS3SIVV2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow Name": "={{ $workflow.name }}",
+            "Student Name": "={{ $('Search Students').item.json.fields['Student Name'] }}",
+            "Status": "Failed",
+            "Error Message": "=Create Tasks Error: {{ $json.message }}\n{{ $json.error.name }}",
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Workflow Name",
+              "displayName": "Workflow Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Student Name",
+              "displayName": "Student Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Success",
+                  "value": "Success"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        336
+      ],
+      "id": "c058ba86-4a51-42c3-8406-eb00b5426699",
+      "name": "Log Error: Create Task ",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Admin ",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQZcqnnPS3SIVV2",
+          "mode": "list",
+          "cachedResultName": "Automation Logs",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tblQZcqnnPS3SIVV2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow Name": "={{ $workflow.name }}",
+            "Student Name": "={{ $('Search Students').item.json.fields['Student Name'] }}",
+            "Status": "Failed",
+            "Error Message": "=Error: Unable to update checkbox\n{{ $('Check the checkboxs for task-created students').item.json.message }}\n{{ $('Check the checkboxs for task-created students').item.json.error.description }}",
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Workflow Name",
+              "displayName": "Workflow Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Student Name",
+              "displayName": "Student Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Success",
+                  "value": "Success"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        240
+      ],
+      "id": "6130a50d-acea-4d71-a733-a9cbda27ecfb",
+      "name": "Log Error: Failed to update checkbox",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "008e7492-36de-4378-b66f-7c05c9819d9b",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1792,
+        48
+      ],
+      "id": "5ede8cfd-f2d2-4fd9-8797-d5396257bc35",
+      "name": "IF no error1"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Admin ",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQZcqnnPS3SIVV2",
+          "mode": "list",
+          "cachedResultName": "Automation Logs",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tblQZcqnnPS3SIVV2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow Name": "={{ $workflow.name }}",
+            "Student Name": "={{ $('Search Students').item.json.fields['Student Name'] }}",
+            "Status": "Success",
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Workflow Name",
+              "displayName": "Workflow Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Student Name",
+              "displayName": "Student Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Success",
+                  "value": "Success"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2016,
+        -48
+      ],
+      "id": "48c30e33-ba9a-46a2-9590-2accc799e047",
+      "name": "Log success",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNqJLQVrxfWStCn",
+          "mode": "list",
+          "cachedResultName": "Admin ",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQZcqnnPS3SIVV2",
+          "mode": "list",
+          "cachedResultName": "Automation Logs",
+          "cachedResultUrl": "https://airtable.com/appNqJLQVrxfWStCn/tblQZcqnnPS3SIVV2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow Name": "={{ $workflow.name }}",
+            "Student Name": "={{ $('Search Students').item.json.fields['Student Name'] }}",
+            "Status": "Failed",
+            "Error Message": "=Error to send notification: {{ $json.error }}",
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Workflow Name",
+              "displayName": "Workflow Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Student Name",
+              "displayName": "Student Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Success",
+                  "value": "Success"
+                },
+                {
+                  "name": "Failed",
+                  "value": "Failed"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        2016,
+        144
+      ],
+      "id": "922a939d-3cd2-4b3c-a9b3-a29d2ab874f5",
+      "name": "Log Error: Notification Error",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "8dee4HBCLjEj40Ot",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Search Students",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Students": {
+      "main": [
+        [
+          {
+            "node": "If no error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create follow-up tasks": {
+      "main": [
+        [
+          {
+            "node": "IF no error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check the checkboxs for task-created students": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If no error": {
+      "main": [
+        [
+          {
+            "node": "Create follow-up tasks",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error: search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF no error": {
+      "main": [
+        [
+          {
+            "node": "Check the checkboxs for task-created students",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error: Create Task ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error: Failed to update checkbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "IF no error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF no error1": {
+      "main": [
+        [
+          {
+            "node": "Log success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Error: Notification Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "23d40759-4066-4be8-b42a-971d5df10c88",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0569d8c99a678a9a0a391f9d210a7d4fecaf05c7a7b3ab725776aec3f845d63d"
+  },
+  "id": "nebYGgQpYvLB5THo",
+  "tags": []
+}
